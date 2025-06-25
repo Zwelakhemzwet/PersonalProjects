@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Canvas in html
+        </title>
+        <style>
+            canvas {
+                border : 1px solid gold;
+            }
+        </style>
+        <script async>
+            window.onload = init;
+            var pageWith = 600;//1280;
+            var pageHeight = 45;//580;
+            function init(){
+                var canvas = document.querySelector("canvas");
+                var ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#6d0f70';
+                ctx.fillRect(50,300,pageWith,pageHeight);
+
+                ctx.fillStyle = "#fffefe";
+                ctx.fillText("TITLE GOES HERE", 50, 50);
+
+            }
+        </script>
+    </head>
+    <body>
+        <canvas width=1280 height=580>
+            message in case canvas isnt supported
+        </canvas>
+    </body>
+</html>
