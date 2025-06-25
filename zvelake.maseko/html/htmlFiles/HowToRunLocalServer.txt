@@ -1,0 +1,5 @@
+php -S localhost:8000 -t /path/to/files
+Ctr-C
+
+sudo systemctl restart apache2
+sudo systemctl stop apache2

@@ -1,0 +1,40 @@
+как получить размер массива в php? count($arrName)
+какие есть ключи в массиве $_FILES?
+
+//
+ServerSocket server = new ServerSocket(8080);
+Socket client = server.accept();
+
+OutputStream os = client.getOutputStream();
+InputStream is = client.getInputStream();
+DataInputStream dis = new DataInputStream(is);
+
+String filename = dis.readUTF();
+if(filename.length() > 20 || !filename.contains(".")){
+    //inform client of error
+}
+String extention = filename.();
+if (extention.length() > 3){
+    //inform client of error
+}
+byte[] buff = new buff[4096];
+FileOutputStream fos = new FileOutputStream(new File("receivedFIles/" + filename));
+int readCount = 0;
+while((readCount = dis.read(buff)) != -1){
+    fos.write(buff, 0, readCount);
+}
+
+//==============================
+<?php
+if(isset($_FILES["filename"]) && $_FILES["filename"]["error"]){
+    if($_FILES["filename"].length > 20 || !strpos($_FILES["filename"], ".") == 0){
+        echo "some error";
+    }
+    $extention = strstr($_FILES["filename"], strpos($_FILES["filename"],".") + 1);
+    if(strlen($extention) > 3){
+        echo "some error";
+    }
+    $dest = "receivedFiles";
+    move_uploaded_file($_FILES["filename"]["tmp_name"], $dest);
+}
+?>

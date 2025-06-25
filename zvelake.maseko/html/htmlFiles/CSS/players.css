@@ -1,0 +1,35 @@
+.container-body{
+    background-color: rgb(167, 152, 152);
+    height : 80vh;
+}
+.container-header {
+    height : 20vh;
+    opacity: 1.5;
+    background-image: url("../media/images/nba1.webp");
+    opacity: 0.5;
+}
+
+.container-header h3 {
+    text-align: center;
+    color : rgb(255, 255, 255);
+}
+
+img{
+    width : 480px !important;
+    height : 300px !important;
+    border-radius: 20px !important;
+}
+#lebron {
+    position : absolute;
+    top : 280px;
+    left : 100px;
+}
+#morant{
+    position : absolute;
+    top : 280px;
+    left : 600px;
+}
+
+img:hover{
+    box-shadow: 0px 0px 15px rgb(238, 231, 231);
+}
