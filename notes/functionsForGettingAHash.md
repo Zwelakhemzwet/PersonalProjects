@@ -2,7 +2,7 @@
 
 **bin2hex - php**
 ```php
-$hasg = bin2hex(randombytes(32)) // 64 символа
+$hash = bin2hex(randombytes(32)) // 64 символа
 ```
 
 **uuid.uuid4**
