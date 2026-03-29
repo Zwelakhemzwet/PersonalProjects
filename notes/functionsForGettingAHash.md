@@ -13,10 +13,15 @@ $hash = hash('sha256', $str) // 64 байт (символов)
  // функции возвращают один и тот же хеш для одного и того же аргумента
 ```
 
-**uuid.uuid4**
+**uuid.uuid1,3,4 (32 байт)**
 ```python
 import uuid
-uid = uuid.uuid4().hex
+uid4 = uuid.uuid4().hex
+uid1 = uuid.uuid1().hex
+uuid3 = uuid.uuid3(
+ uuid.uuid1(),
+ uuid.uuid4().hex
+).hex
 ```
 
 **MD5 - SQL**
