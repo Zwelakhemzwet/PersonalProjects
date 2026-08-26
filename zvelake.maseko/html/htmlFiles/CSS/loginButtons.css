@@ -1,0 +1,28 @@
+input[name="login"], input[name="password"]{
+    position : absolute;
+    left : 500px;
+    width : 200px;
+    height : 30px;
+    background-color: rgb(236, 230, 230);
+    border : 1px solid rgb(214, 212, 218);
+    border-radius : 20px;
+    box-shadow : 0px 0px 15px #ece4ce;
+}
+
+input[type="checkbox"]{
+    position : relative;
+    left : 500px;
+    width : 20px !important;
+    height: 20px !important;
+}
+
+label[for="logSvae"]{
+    position : relative;
+    left : 501px;
+}
+input:hover{
+    transform: scale(1.05);
+}
+input[type="checkbox"]:hover{
+    transform: scale(1.2);
+}

@@ -1,0 +1,10 @@
+a:active{
+    background-color : blue;
+}
+
+a:hover{
+    background-color: solid red;
+}
+a:link{
+    color : orange;
+}

@@ -1,0 +1,53 @@
+@media (min-width:768px){
+    nav {
+        flex-direction: column;
+        gap : 10px;
+        width : 200px;
+    }
+    body h1{
+        text-align: left;
+    }
+}
+.indx {
+    height: 100vh;
+    width : 100vw;
+    background-image: url("../media/images/jamorant1.jpg");
+    background-repeat: no-repeat;
+    color : #ffffffef;
+    text-shadow : 10px 10px 18px #c0bbbb;
+}
+.login {
+    background-image: url("../media/images/lebron-dzhejms_1.jpg");
+    color: white;
+}
+
+nav {
+    display : flex;
+    align-items :center;
+    gap : 10px;
+    margin-right: 20px;
+    border-radius : 20px;
+}
+
+nav a {
+    min-width : 100px;
+    height : 25px;
+    background-color : #693969;
+    border-radius : 10px;
+    text-decoration: none;
+    color : white;
+    text-align: center;
+    box-shadow: 0px 0px 15px #ece4ce;
+    transition : all 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #cf8ccf;
+    border-radius : 20px;
+}
+
+main h1{
+    text-align : center;
+    font-size : 100px;
+    text-shadow : 12px 15px 10px #c0bbbb;
+}

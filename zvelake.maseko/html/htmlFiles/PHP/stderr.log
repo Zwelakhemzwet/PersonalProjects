@@ -1,0 +1,8 @@
+PHP Notice:  stderr 2
+ in /home/zwelakhe/htmlFiles/PHP/Example.php on line 3
+Stderr4
+PHP Fatal error:  Uncaught RuntimeException: Stderr 5
+ in /home/zwelakhe/htmlFiles/PHP/Example.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/zwelakhe/htmlFiles/PHP/Example.php on line 6
