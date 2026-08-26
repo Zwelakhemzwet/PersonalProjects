@@ -8,7 +8,7 @@ if(!fs.existsSync(uploadsDir)){
   fs.mkdirSync(uploadsDir, { recursive: true, mode: 0o777 });
   console.log("created uploads directory");
 } else {
-  fs.chmodSync(uploadsDir, 0o777);
+  //fs.chmodSync(uploadsDir, 0o777);
   console.log("uploads dir exists with permissions set");
 }
 const storage = multer.diskStorage({
