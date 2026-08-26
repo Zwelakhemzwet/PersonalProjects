@@ -5,8 +5,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const uploadsDir = path.join(__dirname, '../uploads');
 if(!fs.existsSync(uploadsDir)){
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  fs.mkdirSync(uploadsDir, { recursive: true, mode: 0o777 });
   console.log("created uploads directory");
+} else {
+  fs.chmodSync(uploadsDir, 0o777);
+  console.log("uploads dir exists with permissions set");
 }
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
