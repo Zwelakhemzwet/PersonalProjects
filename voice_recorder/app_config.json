@@ -1,0 +1,6 @@
+{
+    "context": "vice-recorder-app",
+    "app_name": "Voice Recorder",
+    "app_image": "assets/microphone-solid.png",
+    "ports": "[\"5050\", \"5051\"]"
+}
