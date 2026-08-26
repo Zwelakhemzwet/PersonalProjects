@@ -39,6 +39,6 @@ app.use('/', appRoutes);
 app.use('/erro', errorRoutes);
 
 const PORT = process.env.PORT || 5080;
-server.listen(PORT, () => {
-    console.log("server listening on http://localhost:" + PORT);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log("server listening on http://0.0.0.0:" + PORT);
 });
