@@ -20,12 +20,40 @@ app.use(express.json());
 app.use(express.static(config.BASE_DIR));
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => {
-    console.log("mongodb connected");
-})
-.catch((err) => {
-    console.error("mongodb connection error: ", err);
+// Connection options
+const mongoOptions = {
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  socketTimeoutMS: 45000,
+  family: 4, // Use IPv4, skip trying IPv6
+  retryWrites: true,
+  maxPoolSize: 10
+};
+
+// Connect with better error handling
+mongoose.connect(process.env.MONGODB_URI, mongoOptions)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+    console.log(`📊 Database: ${mongoose.connection.db.databaseName}`);
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error: ", err);
+    console.log("⚠️  Make sure MONGODB_URI is set correctly");
+    console.log("💡 Connection string format: mongodb+srv://username:password@cluster.mongodb.net/dbname");
+  });
+
+// Handle connection events
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  process.exit(0);
 });
 
 const appRoutes = require('./routes/app');
