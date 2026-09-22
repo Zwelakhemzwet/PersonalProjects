@@ -6,18 +6,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Build dependencies (needed only to compile wheels)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-
-# Install Python deps into a virtualenv we can copy to the runtime stage
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
@@ -28,38 +25,35 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=config.settings.production
+    DJANGO_SETTINGS_MODULE=app.settings
 
-# Runtime system deps only (no compilers!)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the pre-built virtualenv from the builder stage
 COPY --from=builder /opt/venv /opt/venv
 
-# Create a non-root user to run the app
 RUN groupadd --system app && useradd --system --gid app --home /app app
 
 WORKDIR /app
 
-# Copy project code
+# Copy the whole project (build context = pdfEditor/ root).
+# .dockerignore keeps venv/media/caches out.
 COPY --chown=app:app . .
 
-# Collect static files at build time (optional; can also run at startup)
-# RUN python manage.py collectstatic --noinput
+# Inside container, manage.py is at /app/app/manage.py
+WORKDIR /app/app
 
 USER app
 
 EXPOSE 8000
 
-# Simple healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD curl -f http://localhost:8000/health/ || exit 1
 
-# Default command — swap for gunicorn/uvicorn in production
-CMD ["gunicorn", "config.wsgi:application", \
+# NOTE: module path reflects your layout: manage.py is next to the `app` package.
+CMD ["gunicorn", "app.wsgi:application", \
      "--bind", "0.0.0.0:8000", \
      "--workers", "3", \
      "--threads", "2", \

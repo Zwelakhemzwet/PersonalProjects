@@ -1,9 +1,10 @@
 services:
   web:
     build: .
+    working_dir: /app/app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app
+      - ./app:/app/app          # mount only the Django project, not the venv
     ports:
       - "8000:8000"
     env_file: .env
@@ -37,8 +38,6 @@ services:
       --appendonly yes
       --maxmemory 256mb
       --maxmemory-policy allkeys-lru
-    ports:
-      - "6379:6379"          # remove in production if you don't need host access
     volumes:
       - redisdata:/data
     healthcheck:
@@ -47,28 +46,12 @@ services:
       timeout: 3s
       retries: 5
 
-  # Optional: Celery worker (if you use Celery)
   worker:
     build: .
-    command: celery -A config worker -l info
+    working_dir: /app/app
+    command: celery -A app worker -l info
     volumes:
-      - .:/app
-    env_file: .env
-    environment:
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/2
-    depends_on:
-      redis:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-
-  # Optional: Celery beat (scheduled tasks)
-  beat:
-    build: .
-    command: celery -A config beat -l info
-    volumes:
-      - .:/app
+      - ./app:/app/app
     env_file: .env
     environment:
       CELERY_BROKER_URL: redis://redis:6379/1

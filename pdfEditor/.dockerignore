@@ -1,19 +1,34 @@
+# VCS
 .git
 .gitignore
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Virtualenvs — MUST be excluded
+venv/
+.venv/
+env/
+ENV/
+**/venv/
+**/.venv/
+
+# Django artifacts
+**/media/
+**/staticfiles/
+**/*.sqlite3
+**/*.db
+
+# Env / secrets
 .env
-*.md
-__pycache__
-*.pyc
-*.pyo
-.venv
-venv
-.pytest_cache
-.mypy_cache
-.ruff_cache
-node_modules
-staticfiles
-media
-.coverage
-htmlcov
-docker-compose*.yml
+.env.*
+*.pem
+
+# Docker / docs
 Dockerfile*
+docker-compose*.yml
+*.md
