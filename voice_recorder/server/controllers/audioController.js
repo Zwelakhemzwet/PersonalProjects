@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const Recording = require('../models/Recording');
+const { uploadToCloud, deleteFromCloud } = require('../utils/cloudStorage');
 
 const config = require('../constants/constants');
 
@@ -30,17 +31,19 @@ exports.uploadAudio = async (req, res) => {
       return res.status(400).json({ error: 'No audio file uploaded' });
     }
 
-    const metadata = req.body.metadata || '{}';//JSON.parse(req.body.metadata || '{}');
-    const fileUrl = req.file.path.startsWith('/') ? req.file.path : `/${req.file.path}`;
+    const metadata = JSON.parse(req.body.metadata || '{}');//JSON.parse(req.body.metadata || '{}');
+    const uploadResult = uploadToCloud(req.file.path, "audio/", req.file.mimetype);
+    const fileUrl = uploadResult.url;
     const audioMetadata = {
       //id: uuidv4(),
       filename: req.file.filename,
       originalName: req.file.originalname,
       size: `${(req.file.size / (1024 * 1024)).toFixed(2)} MB`,
       uploadDate: new Date().toISOString(),
-      metadata: metadata,
+      metadata: JSON.stringify({...metadata, cloudStorageKey: uploadResult.key}),
       url: fileUrl
     };
+    fs.unlinkSync(req.file.path);
 
     //const db = loadMetadata();
     //db.push(audioMetadata);
@@ -97,12 +100,14 @@ exports.deleteAudio = async (req, res) => {
       return res.status(404).json({ error: 'Audio file not found' });
     }
     recording = recording[0];
+    const metadata = JSON.parse(recording.metadata);
 
     // Delete physical file
     const filePath = path.join(config.UPLOADS_DIR, recording.filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
+    deleteFromCloud(metadata.cloudStorageKey);
 
     await Recording.deleteOne({ _id: recording._id });
     // Remove from database
