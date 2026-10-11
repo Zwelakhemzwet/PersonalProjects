@@ -1,9 +1,15 @@
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { createReadStream } from "node:fs";
-import path from "node:path";
-import { randomUUID } from "node:crypto";
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
+
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { createReadStream } = require("node:fs");
+const path = require("node:path");
+const { randomUUID } = require("node:crypto");
 
 const BUCKET = process.env.R2_BUCKET;
 const ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
@@ -18,14 +24,12 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadToCloud(
+async function uploadToCloud(
   filePath,
   keyPrefix,
   contentType = "application/octet-stream"
 ) {
-  const filename = path.basename(filePath);
-  const ext = path.extname(filename).toLowerCase() || ".bin";
-
+  const ext = path.extname(filePath).toLowerCase() || ".bin";
   const key = `${keyPrefix}${randomUUID()}${ext}`;
 
   await s3.send(
@@ -43,8 +47,18 @@ export async function uploadToCloud(
   };
 }
 
-export async function getFileUrl(key) {
-  // Use a permanent public URL if configured.
+async function deleteFromCloud(key) {
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+    })
+  );
+
+  return { key, deleted: true };
+}
+
+async function getFileUrl(key) {
   if (PUBLIC_URL) {
     return `${PUBLIC_URL}/${key
       .split("/")
@@ -52,13 +66,18 @@ export async function getFileUrl(key) {
       .join("/")}`;
   }
 
-  // Otherwise, generate a temporary URL for the private object.
   return getSignedUrl(
     s3,
-    new (await import("@aws-sdk/client-s3")).GetObjectCommand({
+    new GetObjectCommand({
       Bucket: BUCKET,
       Key: key,
     }),
-    { expiresIn: 3600 * 24 * 30 }
+    { expiresIn: 3600 }
   );
 }
+
+module.exports = {
+  uploadToCloud,
+  getFileUrl,
+  deleteFromCloud,
+};
