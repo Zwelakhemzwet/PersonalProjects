@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const Recording = require('../models/Recording');
-const { uploadToCloud, deleteFromCloud } = require('../utils/cloudStorage');
+const { uploadToCloud, deleteFromCloud, getFileUrl } = require('../utils/cloudStorage');
 
 const config = require('../constants/constants');
 
